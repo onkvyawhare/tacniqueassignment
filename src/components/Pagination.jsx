@@ -7,6 +7,8 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
     }
   };
 
+  //pagination
+
   return (
     <div className="flex justify-center mt-4">
       <button
