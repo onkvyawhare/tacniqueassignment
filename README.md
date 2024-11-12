@@ -1,4 +1,4 @@
-# User Management App
+# User Management Dashboard
 
 This is a simple **User Management App** built with **React** and **Redux Toolkit**. The app allows you to add, edit, delete, and view users with their details like name, email, and department. It also features form validation and notifications for user actions.
 
@@ -8,7 +8,7 @@ This is a simple **User Management App** built with **React** and **Redux Toolki
 - **Edit User**: Modify user details.
 - **Delete User**: Remove users from the list.
 - **List Users**: View a table of all users with options to edit or delete.
-- **Department Management**: If the department is not provided, it defaults to "N/A".
+
 
 ## Technologies Used
 
@@ -29,7 +29,7 @@ To run this project locally, you need the following tools installed:
 
 Follow the steps below to get the app running on your local machine.
 
-### 1. Clone the repository
+
 
 ```bash
 git clone https://github.com/onkvyawhare/tacniqueassignment.git
