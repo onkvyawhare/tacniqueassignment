@@ -1,12 +1,19 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addUser } from "../utils/usersSlice";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { editUser, fetchUsers } from "../utils/usersSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import { validateUserForm } from "../utils/validate";
 
-function AddUser() {
+function EditUser() {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  // Find the user by id
+  const user = useSelector((state) =>
+    state.users.users.find((user) => user.id === parseInt(id))
+  );
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,6 +22,20 @@ function AddUser() {
   });
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    if (!user) {
+      dispatch(fetchUsers());
+    } else {
+      const nameParts = user.name.split(" ");
+      setFormData({
+        firstName: nameParts[0] || "",
+        lastName: nameParts[1] || "",
+        email: user.email || "",
+        department: user.company ? user.company.name : "",  
+      });
+    }
+  }, [user, dispatch]);
+  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -26,26 +47,35 @@ function AddUser() {
       setErrors(validationErrors);
       return;
     }
+  
     try {
-      const userToAdd = {
+      const updatedUser = {
+        id: parseInt(id),
         name: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
-        department: formData.department,
+        company: { name: formData.department || user.company?.name },  
       };
-      await dispatch(addUser(userToAdd)).unwrap();
+  
+      // Dispatch the edit user action with the updated data
+      await dispatch(editUser({ id: parseInt(id), user: updatedUser })).unwrap();
       navigate("/");
     } catch (err) {
       setErrors({ submit: err.message });
     }
   };
-
+  
   const handleCancel = () => {
     navigate("/");
   };
 
+  // If user data is still loading, show a loading message
+  if (!user) {
+    return <div className="text-center py-4">Loading...</div>;
+  }
+
   return (
     <div className="max-w-lg mx-auto p-4">
-      <h2 className="text-2xl font-bold text-center mb-6">Add User</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">Edit User</h2>
       {errors.submit && (
         <div className="text-red-500 text-center mb-4">{errors.submit}</div>
       )}
@@ -116,9 +146,9 @@ function AddUser() {
         <div className="flex">
           <button
             type="submit"
-            className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600"
+            className="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600"
           >
-            Add User
+            Save Changes
           </button>
           <button
             type="button"
@@ -133,4 +163,4 @@ function AddUser() {
   );
 }
 
-export default AddUser;
+export default EditUser;

@@ -65,14 +65,12 @@ const usersSlice = createSlice({
       })
       // Add User
       .addCase(addUser.fulfilled, (state, action) => {
-        // Show notification with user details
-        toast.success(`${action.payload.name} has been added`);
-        // Optionally, update state if needed
-        // state.users.push(action.payload);
+        const user = action.payload;
+        console.log("User added:", user);  // Log user data after it's added to the state
+        state.users.push(user);
+        toast.success(`${user.name} has been added`);
       })
-      .addCase(addUser.rejected, (state, action) => {
-        state.error = action.error.message;
-      })
+      
       // Edit User
       .addCase(editUser.fulfilled, (state, action) => {
         const index = state.users.findIndex(
@@ -87,20 +85,13 @@ const usersSlice = createSlice({
         state.error = action.error.message;
       })
       // Delete User
+      
       .addCase(deleteUser.fulfilled, (state, action) => {
-        const deletedUser = state.users.find(
-          (user) => user.id === action.payload
-        );
-        if (deletedUser) {
-          state.users = state.users.filter(
-            (user) => user.id !== action.payload
-          );
-          toast.success(`${deletedUser.name} has been removed`);
-        }
+        // Ensure we are deleting only the user that was clicked
+        state.users = state.users.filter((user) => user.id !== action.payload);
+        toast.success(`User has been removed`);
       })
-      .addCase(deleteUser.rejected, (state, action) => {
-        state.error = action.error.message;
-      });
+      
   },
 });
 

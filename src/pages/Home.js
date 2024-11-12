@@ -66,37 +66,45 @@ function Home() {
             </tr>
           </thead>
           <tbody>
-            {currentUsers.map((user) => (
-              <tr key={user.id} className="border-b border-gray-200">
-                <td className="py-2 px-4">{user.id}</td>
-                <td className="py-2 px-4">
-                  {user.firstName || user.name.split(" ")[0]}
-                </td>
-                <td className="py-2 px-4">
-                  {user.lastName ||
-                    (user.name.split(" ").length > 1
-                      ? user.name.split(" ")[1]
-                      : "")}
-                </td>
-                <td className="py-2 px-4">{user.email}</td>
-                <td className="py-2 px-4">{user.department || "N/A"}</td>
-                <td className="py-2 px-4 flex justify-center gap-3">
-                  <Link
-                    to={`/edit/${user.id}`}
-                    className="text-blue-500 hover:underline "
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="text-red-500 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {currentUsers.map((user) => (
+    <tr key={user.id} className="border-b border-gray-200">
+      <td className="py-2 px-4">{user.id}</td>
+      <td className="py-2 px-4">
+        {/* Safely accessing firstName or splitting name */}
+        {user.firstName || (user.name ? user.name.split(" ")[0] : "N/A")}
+      </td>
+      <td className="py-2 px-4">
+        {/* Safely accessing lastName or splitting name */}
+        {user.lastName ||
+          (user.name && user.name.split(" ").length > 1
+            ? user.name.split(" ")[1]
+            : "N/A")}
+      </td>
+      <td className="py-2 px-4">{user.email || "N/A"}</td>
+      <td className="py-2 px-4">
+        {/* Safely accessing company name */}
+        {user.company && user.company.name ? user.company.name : "N/A"}
+      </td>
+      <td className="py-2 px-4 flex justify-center gap-3">
+        {/* Edit Button - Blue and Rounded */}
+        <Link
+          to={`/edit/${user.id}`}
+          className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-600 transition"
+        >
+          Edit
+        </Link>
+        {/* Delete Button - Red and Rounded */}
+        <button
+          onClick={() => handleDelete(user.id)}
+          className="bg-red-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-red-600 transition"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
       </div>
       <Pagination
